@@ -70,7 +70,7 @@ public:
         {
             vec_.resize(vec1.size());
             std::transform(vec1.begin(), vec1.end(), vec2.begin(),
-                    vec_.begin(), std::plus<double>());
+                    vec_.begin(), std::plus<double>());            
         }
 
         f.set(true);
@@ -81,8 +81,12 @@ public:
         f.set(vec_);
     }
 
-    void print_vector(ck::future<bool> f)
+    void print_vector(ck::future<bool> f, std::vector<ck::future<bool> > f_)
     {
+        // Wait until previous compute is done
+        for (auto& f__ : f_)
+            f__.get();
+
         ckout << "Contents of vector: ";
         for (double const& elem : vec_)
             ckout << elem << ",";

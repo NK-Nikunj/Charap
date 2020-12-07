@@ -3,6 +3,7 @@
 #include <backend/vector_b.hpp>
 
 #include <cstdint>
+#include <type_traits>
 #include <vector>
 
 class Vector
@@ -14,6 +15,8 @@ public:
         addition
     };
 
+    using type = Vector;
+
 // List of all constructors
 public:
 
@@ -24,6 +27,8 @@ public:
     // dependency required for temperory objects.
     Vector(Vector&& vec)
     {
+        ckout << "Copy constructor called (temp)" << endl;
+        
         ck::future<bool> f;
         f_.push_back(f);
 
@@ -38,6 +43,8 @@ public:
     // vec.
     Vector(Vector& vec)
     {
+        ckout << "Copy constructor called (ref)" << endl;
+
         ck::future<bool> f;
         f_.push_back(f);
 
@@ -55,7 +62,7 @@ public:
     // When a new vector is constructed. There are
     // no dependencies. Hence add to the pile of 
     // vectors and generate the vector.
-    Vector(std::vector<double> vec)
+    Vector(std::vector<double>&& vec)
     {
         ck::future<bool> f;
         f_.push_back(f);
@@ -72,8 +79,9 @@ public:
         vec_ = CProxy_vector_b::ckNew(list, f);
     }
 
-// List of all operator based constructors
+// List of all operators and operators based constructors
 public:
+
     Vector(Vector& vec1, Vector& vec2, operators op)
     {
         ck::future<bool> f;
@@ -114,14 +122,14 @@ public:
 
     // A helper function to get all dependencies of 
     // a Vector.
-    std::vector<ck::future<bool> > get_dependencies()
+    std::vector<ck::future<bool> > get_dependencies() const
     {
         return f_;
     }
 
     // A helper function to get access to proxy to 
     // the underneath vector
-    CProxy_vector_b get_proxy()
+    CProxy_vector_b get_proxy() const
     {
         return vec_;
     }
@@ -129,9 +137,9 @@ public:
     void print_vector()
     {
         ck::future<bool> f;
-        f_.push_back(f);
+        vec_.print_vector(f, f_);
 
-        vec_.print_vector(f);
+        f_.push_back(f);
     }
 
 private:
@@ -139,7 +147,7 @@ private:
     std::vector<ck::future<bool> > f_;
 };
 
-inline Vector operator+(Vector vec1, Vector vec2)
+inline Vector operator+(Vector& vec1, Vector& vec2)
 {
     Vector temp = {vec1, vec2, Vector::operators::addition};
 

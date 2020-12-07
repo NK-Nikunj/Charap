@@ -15,6 +15,6 @@ module array_t
              std::vector<ck::future<bool> >, CProxy_vector_b,
              CProxy_vector_b, ck::future<bool>, ck::future<bool>);
             
-        entry void print_vector(ck::future<bool>);
+        entry void print_vector(ck::future<bool>, std::vector<ck::future<bool> >);
     };
 }

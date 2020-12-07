@@ -11,7 +11,7 @@ public:
         Vector B = {2, 4, 6};
         Vector D = {3, 6, 9};
 
-        Vector C = A + B + D;
+        Vector C = A + B;
 
         C.print_vector();
 
