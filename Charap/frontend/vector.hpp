@@ -110,6 +110,83 @@ public:
         }
     }
 
+    Vector(Vector&& vec1, Vector&& vec2, operators op)
+    {
+        ck::future<bool> f;
+        f_.push_back(f);
+
+        if (op == operators::addition)
+        {
+            vec_ = CProxy_vector_b::ckNew();
+
+            // Get dependencies for vec1 and vec2
+            std::vector<ck::future<bool> > deps1 = vec1.get_dependencies();
+            CProxy_vector_b proxy1 = vec1.get_proxy();
+
+            std::vector<ck::future<bool> > deps2 = vec2.get_dependencies();
+            CProxy_vector_b proxy2 = vec2.get_proxy();
+
+            ck::future<bool> f_rhs1;
+            ck::future<bool> f_rhs2;
+
+            vec_.adder(f, deps1, deps2, proxy1, proxy2, f_rhs1, f_rhs2);
+        }
+    }
+
+    Vector(Vector&& vec1, Vector& vec2, operators op)
+    {
+        ck::future<bool> f;
+        f_.push_back(f);
+
+        if (op == operators::addition)
+        {
+            vec_ = CProxy_vector_b::ckNew();
+
+            // Get dependencies for vec1 and vec2
+            std::vector<ck::future<bool> > deps1 = vec1.get_dependencies();
+            CProxy_vector_b proxy1 = vec1.get_proxy();
+
+            std::vector<ck::future<bool> > deps2 = vec2.get_dependencies();
+            CProxy_vector_b proxy2 = vec2.get_proxy();
+
+            // Add dependency on vector to prevent
+            // its further use.
+            ck::future<bool> f_rhs1;
+
+            ck::future<bool> f_rhs2;
+            vec2.add_dependecy(f_rhs2);
+
+            vec_.adder(f, deps1, deps2, proxy1, proxy2, f_rhs1, f_rhs2);
+        }
+    }
+
+    Vector(Vector& vec1, Vector&& vec2, operators op)
+    {
+        ck::future<bool> f;
+        f_.push_back(f);
+
+        if (op == operators::addition)
+        {
+            vec_ = CProxy_vector_b::ckNew();
+
+            // Get dependencies for vec1 and vec2
+            std::vector<ck::future<bool> > deps1 = vec1.get_dependencies();
+            CProxy_vector_b proxy1 = vec1.get_proxy();
+
+            std::vector<ck::future<bool> > deps2 = vec2.get_dependencies();
+            CProxy_vector_b proxy2 = vec2.get_proxy();
+
+            // Add dependency on vector to prevent
+            // its further use.
+            ck::future<bool> f_rhs1;
+            vec1.add_dependecy(f_rhs1);
+
+            ck::future<bool> f_rhs2;
+
+            vec_.adder(f, deps1, deps2, proxy1, proxy2, f_rhs1, f_rhs2);
+        }
+    }
+
 // List of all helper functions
 public:
     // A helper function to add dependencies of a
@@ -148,6 +225,27 @@ private:
 };
 
 inline Vector operator+(Vector& vec1, Vector& vec2)
+{
+    Vector temp = {vec1, vec2, Vector::operators::addition};
+
+    return temp;
+}
+
+inline Vector operator+(Vector&& vec1, Vector& vec2)
+{
+    Vector temp = {vec1, vec2, Vector::operators::addition};
+
+    return temp;
+}
+
+inline Vector operator+(Vector& vec1, Vector&& vec2)
+{
+    Vector temp = {vec1, vec2, Vector::operators::addition};
+
+    return temp;
+}
+
+inline Vector operator+(Vector&& vec1, Vector&& vec2)
 {
     Vector temp = {vec1, vec2, Vector::operators::addition};
 
