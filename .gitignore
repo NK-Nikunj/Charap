@@ -1,0 +1,8 @@
+# vscode files
+.vscode/**
+
+# decl, def files
+Charap/**/*.decl.h
+Charap/**/*.def.h
+tests/*.decl.h
+tests/*.def.h

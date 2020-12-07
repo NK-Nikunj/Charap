@@ -1,0 +1,9 @@
+mainmodule test_vector
+{
+    extern module array_t;
+
+    mainchare Main
+    {
+        entry Main(CkArgMsg*);
+    }
+}
