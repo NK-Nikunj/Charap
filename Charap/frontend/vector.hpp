@@ -20,6 +20,18 @@ public:
     // Disallowing empty vector initializations
     Vector() = delete;
 
+    // Copy constructor (temp object): No implicit
+    // dependency required for temperory objects.
+    Vector(Vector&& vec)
+    {
+        ck::future<bool> f;
+        f_.push_back(f);
+
+        CProxy_vector_b proxy = vec.get_proxy();
+
+        vec_ = CProxy_vector_b::ckNew(f, proxy);
+    }
+
     // Copy constructor: There is an implicit 
     // dependency. Do not let vec change while
     // we assign the new vector its value from
@@ -27,7 +39,7 @@ public:
     Vector(Vector& vec)
     {
         ck::future<bool> f;
-        f_.push_back(std::move(f));
+        f_.push_back(f);
 
         std::vector<ck::future<bool> > deps = vec.get_dependencies();
         CProxy_vector_b proxy = vec.get_proxy();
@@ -37,7 +49,7 @@ public:
         ck::future<bool> f_rhs;
         vec.add_dependecy(f_rhs);
 
-        vec_ = CProxy_vector_b::ckNew(f, deps, proxy);
+        vec_ = CProxy_vector_b::ckNew(f, deps, proxy, f_rhs);
     }
 
     // When a new vector is constructed. There are
@@ -46,7 +58,7 @@ public:
     Vector(std::vector<double> vec)
     {
         ck::future<bool> f;
-        f_.push_back(std::move(f));
+        f_.push_back(f);
         vec_ = CProxy_vector_b::ckNew(vec, f);
     }
 
@@ -56,7 +68,7 @@ public:
     Vector(std::initializer_list<double>&& list)
     {
         ck::future<bool> f;
-        f_.push_back(std::move(f));
+        f_.push_back(f);
         vec_ = CProxy_vector_b::ckNew(list, f);
     }
 
@@ -65,7 +77,7 @@ public:
     Vector(Vector& vec1, Vector& vec2, operators op)
     {
         ck::future<bool> f;
-        f_.push_back(std::move(f));
+        f_.push_back(f);
 
         if (op == operators::addition)
         {
@@ -86,7 +98,7 @@ public:
             ck::future<bool> f_rhs2;
             vec2.add_dependecy(f_rhs2);
 
-            vec_.adder(f, deps1, deps2, proxy1, proxy2);
+            vec_.adder(f, deps1, deps2, proxy1, proxy2, f_rhs1, f_rhs2);
         }
     }
 
@@ -97,7 +109,7 @@ public:
     // RHS to prevent write before read.
     void add_dependecy(ck::future<bool>& f)
     {
-        f_.push_back(std::move(f));
+        f_.push_back(f);
     }
 
     // A helper function to get all dependencies of 
@@ -117,7 +129,7 @@ public:
     void print_vector()
     {
         ck::future<bool> f;
-        f_.push_back(std::move(f));
+        f_.push_back(f);
 
         vec_.print_vector(f);
     }
@@ -127,7 +139,7 @@ private:
     std::vector<ck::future<bool> > f_;
 };
 
-Vector operator+(Vector& vec1, Vector& vec2)
+inline Vector operator+(Vector vec1, Vector vec2)
 {
     Vector temp = {vec1, vec2, Vector::operators::addition};
 

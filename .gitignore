@@ -6,3 +6,8 @@ Charap/**/*.decl.h
 Charap/**/*.def.h
 tests/*.decl.h
 tests/*.def.h
+
+# build files
+Charap/libcharap.a
+tests/test_vector
+tests/charmrun

@@ -1,0 +1,10 @@
+#point these to absolute paths
+CHARM_DIR = $(HOME)/install/charm
+BASE_DIR = $(HOME)/Projects/Charap/Charap
+
+#common options
+CHARMC = $(CHARM_DIR)/bin/charmc -DUSE_ESSL_WRAPPER=0
+OPTS	= -O3
+LD_OPTS = 
+
+INCS = -I${BASE_DIR}

@@ -4,14 +4,16 @@ module array_t
     chare vector_b
     {
         entry vector_b();
+        entry vector_b(ck::future<bool>, CProxy_vector_b);
         entry vector_b(std::vector<double>, ck::future<bool>);
-        entry vector_b(ck::future<bool>, std::vector<ck::future<bool> >, CProxy_vector_b);
+        entry vector_b(ck::future<bool>, std::vector<ck::future<bool> >,
+                    CProxy_vector_b, ck::future<bool>);
         
         entry void get_vector(ck::future<std::vector<double> >);
 
         entry void adder(ck::future<bool>, std::vector<ck::future<bool> >,
              std::vector<ck::future<bool> >, CProxy_vector_b,
-             CProxy_vector_b);
+             CProxy_vector_b, ck::future<bool>, ck::future<bool>);
             
         entry void print_vector(ck::future<bool>);
     };

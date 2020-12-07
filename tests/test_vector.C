@@ -9,8 +9,9 @@ public:
     {
         Vector A = std::vector<double>({1, 2, 3});
         Vector B = {2, 4, 6};
+        Vector D = {3, 6, 9};
 
-        Vector C = A + B;
+        Vector C = A + B + D;
 
         C.print_vector();
 

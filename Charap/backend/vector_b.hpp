@@ -15,7 +15,18 @@ public:
         f.set(true);
     }
 
-    vector_b(ck::future<bool> f, std::vector<ck::future<bool> > deps, CProxy_vector_b proxy)
+    vector_b(ck::future<bool> f, CProxy_vector_b proxy)
+    {
+        ck::future<std::vector<double> > f_;
+        proxy.get_vector(f_);
+
+        vec_ = f_.get();
+
+        f.set(true);
+    }
+
+    vector_b(ck::future<bool> f, std::vector<ck::future<bool> > deps,
+            CProxy_vector_b proxy, ck::future<bool> f_rhs)
     {
         // Wait until any prior compute remains of the copy-ing vector
         for (auto& dep : deps)
@@ -27,11 +38,12 @@ public:
         vec_ = f_.get();
 
         f.set(true);
+        f_rhs.set(true);
     }
 
     void adder(ck::future<bool> f, std::vector<ck::future<bool> > deps1,
              std::vector<ck::future<bool> > deps2, CProxy_vector_b proxy1,
-             CProxy_vector_b proxy2)
+             CProxy_vector_b proxy2, ck::future<bool> f_rhs1, ck::future<bool> f_rhs2)
     {
         // Wait until any prior compute remains of the copy-ing vector
         for (auto& dep1: deps1)
@@ -49,6 +61,9 @@ public:
         std::vector<double> vec1 = std::move(f1.get());
         std::vector<double> vec2 = std::move(f2.get());
 
+        f_rhs1.set(true);
+        f_rhs2.set(true);
+
         if (vec1.size() != vec2.size())
             ckout << "Vector size mismatch!" << endl;
         else
@@ -64,6 +79,16 @@ public:
     void get_vector(ck::future<std::vector<double> > f)
     {
         f.set(vec_);
+    }
+
+    void print_vector(ck::future<bool> f)
+    {
+        ckout << "Contents of vector: ";
+        for (double const& elem : vec_)
+            ckout << elem << ",";
+        ckout << endl;
+
+        f.set(true);
     }
 
 private:
