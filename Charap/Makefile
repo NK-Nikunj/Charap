@@ -6,11 +6,11 @@ libs: libcharap.a
 
 .PHONY: distclean clean
 
-libcharap.a: array_t.o
-	$(CHARMC) ${LD_OPTS} -o $@ $< -I$(BASE_DIR); rm array_t.o
+libcharap.a: operators.o
+	$(CHARMC) ${LD_OPTS} -o $@ $< -I$(BASE_DIR); rm operators.o
 
-array_t.o: ${BASE_DIR}/frontend/array_t.C Charap.hpp
-	cd backend; $(CHARMC) array_t.ci;
+operators.o: ${BASE_DIR}/frontend/operators.C Charap.hpp
+	cd backend; $(CHARMC) operators.ci;
 	$(CHARMC) -c ${OPTS} $< -I$(BASE_DIR)
 
 distclean: clean

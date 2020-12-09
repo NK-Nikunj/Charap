@@ -1,0 +1,6 @@
+module operators
+{
+    chare add_vector {
+        entry add_vector(ck::future<std::vector<double>>, ck::future<std::vector<double>>, ck::future<std::vector<double>>);
+    };
+}
