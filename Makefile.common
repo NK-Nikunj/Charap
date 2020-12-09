@@ -4,7 +4,7 @@ BASE_DIR = $(HOME)/Projects/Charap/Charap
 
 #common options
 CHARMC = $(CHARM_DIR)/bin/charmc -DUSE_ESSL_WRAPPER=0
-OPTS	= -std=c++17
+OPTS	= -std=c++17 -g
 LD_OPTS = 
 
 INCS = -I${BASE_DIR}
