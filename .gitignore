@@ -11,4 +11,4 @@ tests/**/*.def.h
 Charap/libcharap.a
 tests/test_vector
 tests/**/charmrun
-tests/**/vector
+tests/vector/vector

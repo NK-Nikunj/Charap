@@ -1,0 +1,10 @@
+mainmodule vector
+{
+    extern module operators;
+
+    mainchare Main
+    {
+        entry Main(CkArgMsg*);
+        entry void finish();
+    };
+}
