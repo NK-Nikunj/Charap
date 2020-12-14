@@ -3,9 +3,9 @@
 #include "charm++.h"
 
 struct garbage {
-    static void collect(std::unique_ptr<ck::future<std::vector<double>>> &f) {
-        futures.emplace_back(std::move(f));
+    static void collect(ck::future<std::vector<double>> &f) {
+        futures.emplace_back(f);
     }
 
-    static std::vector<std::unique_ptr<ck::future<std::vector<double>>>> futures;
+    static std::vector<ck::future<std::vector<double>>> futures;
 };

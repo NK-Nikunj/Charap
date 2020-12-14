@@ -4,11 +4,11 @@
 
 #include <vector>
 
-class add_vector : public CBase_add_vector {
+class sub_vector : public CBase_sub_vector {
 public:
-  add_vector() {}
+  sub_vector() {}
 
-  void add(ck::future<std::vector<double>> f1,
+  void subtract(ck::future<std::vector<double>> f1,
              ck::future<std::vector<double>> f2,
              ck::future<std::vector<double>> f3) {
     std::vector<double> vec2 = f2.get();
@@ -18,7 +18,7 @@ public:
     vec1.reserve(vec2.size());
 
     for (int i = 0; i < vec2.size(); ++i)
-      vec1.emplace_back(vec2.at(i) + vec3.at(i));
+      vec1.emplace_back(vec2.at(i) - vec3.at(i));
 
     f1.set(vec1);
   }

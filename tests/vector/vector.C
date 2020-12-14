@@ -18,25 +18,12 @@ public:
         Vector B {1000000, 2};
         Vector D {1000000, 3};
 
-        A.check('A');
-        A.check('A');
-        // B.check('B');
-        Vector C = A + B;
+        Vector C = A;
 
-        CkWaitQD();
+        C = A + B + C;
 
-        D.check('D');
-        D.check('D');
-        C.check('C');
-        C.check('C');
-        A.check('A');
-        B.check('B');
+        A = B - D;
 
-        A = B;
-
-        // C.print_vector();
-
-        // Quiscence detection
         CkStartQD(CkCallback::ckExit);
     }
 };

@@ -1,10 +1,36 @@
 module operators
 {
-    chare add_vector {
-        entry add_vector(ck::future<std::vector<double>>, ck::future<std::vector<double>>, ck::future<std::vector<double>>);
+    array [1D] reducer {
+        entry reducer();
+        entry reducer(ck::future<double>);
+        entry reducer(ck::future<std::vector<double>>);
+
+        entry void mul_then_add(ck::future<std::vector<double>>, ck::future<std::vector<double>>);
+
+        entry [reductiontarget] void store(double);
     };
 
-    chare loader {
-        entry loader(ck::future<std::vector<double> >, ck::future<std::vector<double> >);
+    chare add_vector {
+        entry add_vector();
+    
+        entry [threaded] void add(ck::future<std::vector<double>>, ck::future<std::vector<double>>, ck::future<std::vector<double>>);
+    };
+
+    chare sub_vector {
+        entry sub_vector();
+
+        entry [threaded] void subtract(ck::future<std::vector<double>>, ck::future<std::vector<double>>, ck::future<std::vector<double>>);
     }
+
+    chare loader {
+        entry loader();
+    
+        entry [threaded] void load(ck::future<std::vector<double>>, ck::future<std::vector<double>>);
+    };
+
+    chare checker {
+        entry checker(ck::future<std::vector<double>>);
+    
+        entry [threaded] void check();
+    };
 }
