@@ -4,15 +4,20 @@
 
 #include <vector>
 
-class checker : public CBase_checker {
+class checker : public CBase_checker
+{
 public:
-    checker(ck::future<std::vector<double>> f) :
-        f_(f) {}
+    checker(ck::future<std::vector<double>> f)
+      : f_(f)
+    {
+    }
 
-    void check() {
+    void check()
+    {
         f_.get();
         ckout << "Checks out!" << endl;
     }
+
 private:
     ck::future<std::vector<double>> f_;
 };

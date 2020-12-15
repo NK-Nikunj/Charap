@@ -11,131 +11,227 @@
 #include <type_traits>
 #include <vector>
 
-class Vector {
+class Vector
+{
 public:
-  // Vector_Impl size can't exceed by the following value.
-  const int arr_size_ = 100000;
+    // Vector_Impl size can't exceed by the following value.
+    const int arr_size_ = 100000;
 
-public:
-  Vector() = delete;
-
-  Vector(Vector const& vec) : size_(vec.size()), is_transposed_(false) {
-    vec_.reserve(vec.length());
-
-    for (Vector_Impl const& elem : vec.vector())
-      vec_.emplace_back(elem);
-  }
-
-  explicit Vector(int const& size) : size_(size), is_transposed_(false) {
-    // Number of Vector_Impl objects required
-    const int num_arr = size / arr_size_;
-    // Size of the last Vector_Impl object
-    const int end_size = size % arr_size_;
-
-    vec_.reserve(num_arr + 1);
-
-    for (int i = 0; i < num_arr; ++i)
-      vec_.emplace_back(arr_size_);
-
-    if (end_size)
-      vec_.emplace_back(end_size);
-  }
-
-  explicit Vector(int const& size, int const& val) : size_(size), is_transposed_(false) {
-    // Number of Vector_Impl objects required
-    const int num_arr = size / arr_size_;
-    // Size of the last Vector_Impl object
-    const int end_size = size % arr_size_;
-
-    vec_.reserve(num_arr + 1);
-
-    for (int i = 0; i < num_arr; ++i)
-      vec_.emplace_back(arr_size_, val);
-
-    if (end_size)
-      vec_.emplace_back(end_size, val);
-  }
+    using type = double;
 
 public:
-  Vector& operator=(Vector const& vec)
-  {
-    assert(size_ == vec.size());
+    Vector() = delete;
 
-    if (this != &vec) {
-      for (int i = 0; i < vec_.size(); ++i)
-        vec_[i] = vec[i];
+    Vector(Vector const& vec)
+      : size_(vec.size())
+      , is_transposed_(false)
+    {
+        vec_.reserve(vec.length());
+
+        for (Vector_Impl const& elem : vec.vector())
+            vec_.emplace_back(elem);
     }
 
-    return *this;
-  }
+    explicit Vector(int const& size)
+      : size_(size)
+      , is_transposed_(false)
+    {
+        // Number of Vector_Impl objects required
+        const int num_arr = size / arr_size_;
+        // Size of the last Vector_Impl object
+        const int end_size = size % arr_size_;
 
-  Vector_Impl const &operator[](int const& i) const { return vec_.at(i); }
+        vec_.reserve(num_arr + 1);
 
-  Vector_Impl &operator[](int const& i) { return vec_.at(i); }
+        for (int i = 0; i < num_arr; ++i)
+            vec_.emplace_back(arr_size_);
 
-  Vector& transpose() {
-    is_transposed_ = !is_transposed_;
+        if (end_size)
+            vec_.emplace_back(end_size);
+    }
 
-    return *this;
-  }
+    explicit Vector(int const& size, int const& val)
+      : size_(size)
+      , is_transposed_(false)
+    {
+        // Number of Vector_Impl objects required
+        const int num_arr = size / arr_size_;
+        // Size of the last Vector_Impl object
+        const int end_size = size % arr_size_;
+
+        vec_.reserve(num_arr + 1);
+
+        for (int i = 0; i < num_arr; ++i)
+            vec_.emplace_back(arr_size_, val);
+
+        if (end_size)
+            vec_.emplace_back(end_size, val);
+    }
 
 public:
-  int size() const { return size_; }
-  int length() const { return vec_.size(); }
-  const std::vector<Vector_Impl>&  vector() const { return vec_; }
-  std::vector<Vector_Impl>& vector() { return vec_; }
-  bool is_transposed() const { return is_transposed_; }
+    Vector& operator=(Vector const& vec)
+    {
+        assert(size_ == vec.size());
 
-  void check(char const& c) {
-    ckout << "Working on: " << c << endl;
-    for (Vector_Impl& elem : vec_)
-      elem.check();
-  }
+        if (this != &vec)
+        {
+            for (int i = 0; i < vec_.size(); ++i)
+                vec_[i] = vec[i];
+        }
+
+        return *this;
+    }
+
+    friend std::vector<Vector_Impl>::iterator begin(Vector& vec)
+    {
+        return begin(vec.vector());
+    }
+    friend std::vector<Vector_Impl>::const_iterator const begin(
+        Vector const& vec)
+    {
+        return begin(vec.vector());
+    }
+    friend std::vector<Vector_Impl>::const_iterator cbegin(Vector const& vec)
+    {
+        return begin(vec.vector());
+    }
+
+    friend std::vector<Vector_Impl>::iterator end(Vector& vec)
+    {
+        return end(vec.vector());
+    }
+    friend std::vector<Vector_Impl>::const_iterator const end(Vector const& vec)
+    {
+        return end(vec.vector());
+    }
+    friend std::vector<Vector_Impl>::const_iterator cend(Vector const& vec)
+    {
+        return end(vec.vector());
+    }
+
+    Vector_Impl const& operator[](int const& i) const
+    {
+        return vec_.at(i);
+    }
+
+    Vector_Impl& operator[](int const& i)
+    {
+        return vec_.at(i);
+    }
+
+    Vector& transpose()
+    {
+        is_transposed_ = !is_transposed_;
+
+        return *this;
+    }
+
+public:
+    int size() const
+    {
+        return size_;
+    }
+    int length() const
+    {
+        return vec_.size();
+    }
+    const std::vector<Vector_Impl>& vector() const
+    {
+        return vec_;
+    }
+    std::vector<Vector_Impl>& vector()
+    {
+        return vec_;
+    }
+    bool is_transposed() const
+    {
+        return is_transposed_;
+    }
+
+    void check(char const& c)
+    {
+        ckout << "Working on: " << c << endl;
+        for (Vector_Impl& elem : vec_)
+            elem.check();
+    }
 
 private:
-  std::vector<Vector_Impl> vec_;
-  const int size_;
+    std::vector<Vector_Impl> vec_;
+    const int size_;
 
-  bool is_transposed_;
+    bool is_transposed_;
 };
 
-inline Vector operator+(Vector const &vec1, Vector const &vec2) {
-  // Step 1 check. Ensure both vectors have same sizes.
-  assert(vec1.size() == vec2.size());
+inline Vector operator+(Vector const& vec1, Vector const& vec2)
+{
+    // Step 1 check. Ensure both vectors have same sizes.
+    assert(vec1.size() == vec2.size());
 
-  Vector temp{vec1.size()};
+    Vector temp{vec1.size()};
 
-  for (int i = 0; i < vec1.length(); ++i) {
-    temp[i] = vec1[i] + vec2[i];
-  }
+    for (int i = 0; i < vec1.length(); ++i)
+    {
+        temp[i] = vec1[i] + vec2[i];
+    }
 
-  return temp;
+    return temp;
 }
 
-inline Vector operator-(Vector const &vec1, Vector const &vec2) {
-  // Step 1 check. Ensure both vectors have same sizes and 2nd is transposed.
-  assert(vec1.size() == vec2.size());
+inline Vector operator-(Vector const& vec1, Vector const& vec2)
+{
+    // Step 1 check. Ensure both vectors have same sizes and 2nd is transposed.
+    assert(vec1.size() == vec2.size());
 
-  Vector temp{vec1.size()};
+    Vector temp{vec1.size()};
 
-  for (int i = 0; i < vec1.length(); ++i) {
-    temp[i] = vec1[i] - vec2[i];
-  }
+    for (int i = 0; i < vec1.length(); ++i)
+    {
+        temp[i] = vec1[i] - vec2[i];
+    }
 
-  return temp;
+    return temp;
 }
 
-inline Vector operator*(Vector const &vec1, Vector const &vec2) {
-  // Step 1 check. Ensure both vectors have same sizes.
-  assert((vec1.size() == vec2.size()) && vec2.is_transposed());
+inline Vector operator*(Vector const& vec1, Vector const& vec2)
+{
+    // Step 1 check. Ensure both vectors have same sizes.
+    assert((vec1.size() == vec2.size()) && vec2.is_transposed());
 
-  Vector temp{1};
+    Vector temp{1};
 
-  CProxy_reducer reducer = CProxy_reducer::ckNew(temp.vector(), vec1.size());
-  int i = 0;
-  boost::range::for_each(vec1, vec2, [&reducer, &i](Vector_Impl const& vec1, Vector_Impl const& vec2) {
-    reducer[i++].mul_then_add(vec1.vector(), vec2.vector());
-  });
+    CProxy_reducer reducer =
+        CProxy_reducer::ckNew(temp[0].vector(), vec1.size());
 
-  return temp;
+    for (int i = 0; i < vec1.length(); ++i)
+    {
+        reducer[i].mul_then_add(vec1[i].vector(), vec2[i].vector());
+    }
+
+    // int i = 0;
+    // boost::range::for_each(vec1, vec2, [&reducer, &i](Vector_Impl const& vec1, Vector_Impl const& vec2) {
+    //   reducer[i++].mul_then_add(vec1.vector(), vec2.vector());
+    // });
+
+    return temp;
+}
+
+inline Scalar dot(Vector const& vec1, Vector const& vec2)
+{
+    // Step 1 check. Ensure both vectors have same sizes.
+    assert((vec1.size() == vec2.size()) && vec2.is_transposed());
+
+    Scalar temp{};
+
+    CProxy_reducer reducer = CProxy_reducer::ckNew(temp.value(), vec1.size());
+
+    for (int i = 0; i < vec1.length(); ++i)
+    {
+        reducer[i].mul_then_add(vec1[i].vector(), vec2[i].vector());
+    }
+
+    // boost::range::for_each(vec1, vec2, [&reducer, &i](Vector_Impl const& vec1, Vector_Impl const& vec2) {
+    //   reducer[i++].mul_then_add(vec1.vector(), vec2.vector());
+    // });
+
+    return temp;
 }
