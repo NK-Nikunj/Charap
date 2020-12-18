@@ -14,19 +14,19 @@ public:
 
     void finish()
     {
-        Vector A{1000000, 1};
-        Vector B{1000000, 2};
-        Vector D{1000000, 3};
+        aum::Vector<double> A{1000000, 1};
+        aum::Vector<double> B{1000000, 2};
+        aum::Vector<double> D{1000000, 3};
 
-        Vector C = A;
+        aum::Vector<double> C = A;
 
-        Scalar a = dot(A.transpose(), B);
+        Scalar<double> a = dot(A.transpose(), B);
 
         A = B - D;
 
         C = A + B + C;
 
-        Vector E = A.transpose() * B;
+        aum::Vector<double> E = A.transpose() * B;
 
         CkStartQD(CkCallback::ckExit);
     }

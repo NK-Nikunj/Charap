@@ -1,5 +1,6 @@
 module operators
 {
+
     array [1D] reducer {
         entry reducer();
         entry reducer(ck::future<double>);
@@ -13,7 +14,8 @@ module operators
     chare add_vector {
         entry add_vector();
     
-        entry [threaded] void add(ck::future<std::vector<double>>, ck::future<std::vector<double>>, ck::future<std::vector<double>>);
+        template <typename _Tp1, typename _Tp2, typename _Tp3>
+        entry [threaded] void add(ck::future<std::vector<_Tp1>>, ck::future<std::vector<_Tp2>>, ck::future<std::vector<_Tp3>>);
     };
 
     chare sub_vector {
@@ -26,11 +28,5 @@ module operators
         entry loader();
     
         entry [threaded] void load(ck::future<std::vector<double>>, ck::future<std::vector<double>>);
-    };
-
-    chare checker {
-        entry checker(ck::future<std::vector<double>>);
-    
-        entry [threaded] void check();
     };
 }
